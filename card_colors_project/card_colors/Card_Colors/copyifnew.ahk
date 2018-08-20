@@ -1,33 +1,51 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance Force
 #Persistent
-; #Warn  ; Enable warnings to assist with detecting common errors.
+;#Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-
 ;############################################################################################
 ;                  ################## AUTOEXECUTE ################
-CopyIfNewer(CopySource,CopyDest)
+CopyIfNewer(RemoteDir,LocalDir)
 {
-    global
+	global
 	copy_happen := False
     codebase_name := ""
-	Loop, Files, %CopySource%\*, D
+	RemoteFolderNames :=
+	RemoteDateOrdName_Obj := Object()
+	RemoteDateOrdTime_Obj := Object()
+	
+	Loop, Files, %RemoteDir%\*, D
+	{
+		RemoteFolderNames := RemoteFolderNames . A_LoopFileTimeModified . "`t" . A_LoopFileName . "`n"
+	}
+	
+	Sort, RemoteFolderNames, R
+	
+	Loop, Parse, RemoteFolderNames, `n
+	{
+		if (A_LoopField = "")
+		{
+			continue 																									; Omit the last linefeed (blank item) at the end of the list.
+		}
+		RemoteFolderArray := StrSplit(A_LoopField, A_Tab, " `t")
+		RemoteDateOrdName_Obj.Insert(RemoteFolderArray[2])
+		RemoteDateOrdTime_Obj.Insert(RemoteFolderArray[1])
+	}
+	RemoteFolderNames := ""
+	RemoteFolderArray := ""
+	
+	Loop % RemoteDateOrdName_Obj.length()
 	{
 		file_exist := false
 		copy_it := False
-        codebase_name := ""
-		file_exist := FileExist(CopyDest . "\" . A_LoopFileName)
-		;IfNotExist CopyDest"\"A_LoopFileName  ; Always copy if target file doesn't yet exist.
-		;{
-		;	copy_it := True
-		;	copy_happen := True
-		;}
-		if (FileExist(CopyDest . "\" . A_LoopFileName))
+		codebase_name := ""
+		file_exist := FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index])
+		if (FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]))
 		{
-			FileGetTime, time, %CopyDest%\%A_LoopFileName%
-			EnvSub, time, %A_LoopFileTimeModified%, seconds  ; Subtract the source file's time from the destination's.
-			if time < 0  ; Source file is newer than destination file.
+			FileGetTime, time, % LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			EnvSub, time, % RemoteDateOrdTime_Obj[A_Index], seconds  															; Subtract the source file's time from the destination's.
+			if time < 0 																								; Source file is newer than destination file.
 			{
 				copy_it := True
 				copy_happen := True
@@ -40,18 +58,21 @@ CopyIfNewer(CopySource,CopyDest)
 		
 		if (copy_it = True) OR (file_exist = false)
 		{
-            codebase_name := A_LoopFileName
-            Gosub, CheckTrunk
-            ;Gosub, CheckBranch
-            ;GoSub, CheckTwig
-			TrayTip, Codebase copy ,Updating local PowerMill codebase with %A_LoopFileName%.
-			FileCopyDir, %A_LoopFileFullPath%, %CopyDest%\%A_LoopFileName%, 1   ; Copy with overwrite=yes
+			codebase_name := RemoteDateOrdName_Obj[A_Index]
+			Gosub, CheckTrunk
+			;Gosub, CheckBranch
+			;GoSub, CheckTwig
+			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
+			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			FileCopyDir, %RemotePath%, %LocalPath%, 1   										; Copy with overwrite=yes
 			if ErrorLevel
 			{
-				MsgBox, Could not copy "%A_LoopFileFullPath%" to "%CopyDest%\%A_LoopFileName%".
+				MsgBox, Could not copy "%RemotePath%" to "%LocalPath%".
+				ExitApp
 			}
-			FileSetTime, , %CopyDest%\%A_LoopFileName%, M, 2, 0
-			;FileCreateDir, %CopyDest%\%A_LoopFileName%
+			FileSetTime,, %LocalPath%, M, 2, 0
+			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
 		}
 	}
     codebase_name := ""
@@ -61,12 +82,12 @@ CopyIfNewer(CopySource,CopyDest)
 	}
 Return
 }
-Source = C:\Users\Chris\Desktop\ahk script\Card_Colors\data\remote
-Destination = C:\Users\Chris\Desktop\ahk script\Card_Colors\data\local
+RemoteSource = %A_ScriptDir%\data\remote
+LocalDestination = %A_ScriptDir%\data\local
 
 RunOnStartup:
-TrayTip, Codebase copy startup , Checking %Source% for new builds.
-CopyIfNewer(Source,Destination)
+TrayTip, Codebase copy startup , Checking %RemoteSource% for new builds.
+CopyIfNewer(RemoteSource,LocalDestination)
 SetTimer, Timer, -500
 return
 ;############################################################################################
@@ -74,23 +95,21 @@ return
 TIMER:
 target := A_Now
 EnvAdd, target, 1, h
-if (target < A_Now)
-{   ; time(today) has passed already, so use time(tomorrow)
+if (target < A_Now) 																					; time(today) has passed already, so use time(tomorrow)
+{   
     EnvAdd, target, 1, d
-}
-; Calculate how many seconds until the target time is reached.
-EnvSub, target, %A_Now%, Seconds
-; Sleep until the target is reached.
+} 																										; Calculate how many seconds until the target time is reached.
+EnvSub, target, %A_Now%, Seconds 																		; Sleep until the target is reached.
 Sleep, % target * 1000 ; (milliseconds)
-TrayTip, Codebase copy , Checking %Source% for new builds.
-CopyIfNewer(Source,Destination)
+TrayTip, Codebase copy , Checking %RemoteSource% for new builds.
+CopyIfNewer(RemoteSource,LocalDestination)
 
 Gosub, Timer
 return
 
 CheckTrunk:
 LoopObj := Object()
-Loop, Read, C:\Users\Chris\Desktop\ahk script\Card_Colors\data\networkfile.txt
+Loop, Read, %A_ScriptDir%\data\networkfile.txt
 {
    IfInString, A_LoopReadLine, NT:pm
    {
