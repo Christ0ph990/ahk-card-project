@@ -14,12 +14,20 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;############################################################################################
 ;                  ################## AUTOEXECUTE ################
 
-RemoteSource = %A_ScriptDir%\data\remote
-LocalDestination = %A_ScriptDir%\data\local
+RemoteSource = %A_ScriptDir%\data\remote																; Change this to \\bullring for real deal
+LocalDestination = %A_ScriptDir%\data\local																; Change this to my local build area
 
 RunOnStartup:
 TrayTip, Codebase copy startup , Checking %RemoteSource% for new builds.
+
+Get_tbt_versions()
+
+curl_networkfile("Trunk")
+curl_networkfile("Branch")
+curl_networkfile("Twig")
+
 CopyIfNewer(RemoteSource,LocalDestination)
+
 SetTimer, Timer, -500
 return
 ;############################################################################################
@@ -32,7 +40,7 @@ if (target < A_Now) 																					; time(today) has passed already, so us
     EnvAdd, target, 1, d
 } 																										; Calculate how many seconds until the target time is reached.
 EnvSub, target, %A_Now%, Seconds 																		; Sleep until the target is reached.
-Sleep, % target * 1000 ; (milliseconds)
+Sleep, % target * 1000																					; (milliseconds)
 TrayTip, Codebase copy , Checking %RemoteSource% for new builds.
 CopyIfNewer(RemoteSource,LocalDestination)
 
@@ -40,21 +48,26 @@ Gosub, Timer
 return
 
 CheckTrunk:
-LoopObj := Object()
+trunk_LoopObj := Object()
 Loop, Read, %A_ScriptDir%\data\networkfile.txt
 {
    IfInString, A_LoopReadLine, NT:pm
    {
-      StringSplit, FirstSplit, A_LoopReadLine, `:
-      StringSplit, SecondSplit, FirstSplit2, `-, " `t"
-      LoopObj.Insert(SecondSplit1)
+		SplitArray1 := StrSplit(A_LoopReadLine, "`:")
+		SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
+		;StringSplit, FirstSplit, A_LoopReadLine, `:
+		;StringSplit, SecondSplit, FirstSplit2, `-, " `t"
+		trunk_LoopObj.Insert(SplitArray2[1])
    }
 }
-Loop % LoopObj.length()
+SplitArray1 := ""
+SplitArray2 := ""
+
+Loop % trunk_LoopObj.length()
 {
-    If(LoopObj[A_Index] = codebase_name)
+    If(trunk_LoopObj[A_Index] = codebase_name)
     {
-        MsgBox % codebase_name . " should be the same as " . LoopObj[A_Index]
+        MsgBox % codebase_name . " should be the same as " . trunk_LoopObj[A_Index]
     }
 }
 return
