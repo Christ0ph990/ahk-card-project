@@ -140,7 +140,7 @@ curl_networkfile(tbt_version)
 	global
 	configString := "tbt_" . tbt_version . "Code"
 	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "network_file.txt"""
-	RunWait % "PowerShell.exe -noexit -Command ""& {" . curlString . "", ,
+	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
 	return
 }
 ;########################################################################################################################
