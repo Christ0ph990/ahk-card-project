@@ -1,4 +1,12 @@
 ;########################################################################################################################
+UpdateJiraFilters()
+{
+	;At the moment when it gets here the RemoteDateOrdName_Obj still contains the cb names in each array cell. I can loop over this object and append the cells contents to the correct json file (using if update_twig =1 ... if update trunk = 1...) for a reasonable character limit.
+	;Then i just fire off the appropriate curl command based on the branch flag. and then its done!.
+	Return
+}
+;########################################################################################################################
+;########################################################################################################################
 CopyIfNewer(RemoteDir,LocalDir)
 {
 	global
@@ -136,7 +144,7 @@ curl_networkfile(tbt_version)
 {
 	global
 	configString := "tbt_" . tbt_version . "Code"
-	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "network_file.txt"""
+	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "_networkfile.txt"""
 	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
 	tbt_version := ""
 	return

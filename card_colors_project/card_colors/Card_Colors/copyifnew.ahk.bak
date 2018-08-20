@@ -27,7 +27,7 @@ curl_networkfile("Branch")
 curl_networkfile("Twig")
 
 CopyIfNewer(RemoteSource,LocalDestination)
-
+;UpdateJiraFilters()
 SetTimer, Timer, -500
 return
 ;############################################################################################
@@ -61,9 +61,9 @@ If(is_in_Trunk = True)
 }
 
 folder_match_tbt("Branch")
-If(is_in_Trunk = True)
+If(is_in_Branch = True)
 {
-    update_Trunk := True
+    update_Branch := True
     LoopObj := ""
     return
 }
@@ -77,11 +77,6 @@ If(is_in_Trunk = True)
 }
 return
 
-;CheckBranch:
-;return
-;
-;CheckTwig:
-;return
 
 +Esc::
 ExitApp
