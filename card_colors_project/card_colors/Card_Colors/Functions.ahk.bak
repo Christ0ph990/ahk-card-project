@@ -48,13 +48,10 @@ CopyIfNewer(RemoteDir,LocalDir)
 		{
 			file_exist := false
 		}
-		
 		if (copy_it = True) OR (file_exist = false)
 		{
 			codebase_name := RemoteDateOrdName_Obj[A_Index]
-			Gosub, CheckTrunk
-			;Gosub, CheckBranch
-			;GoSub, CheckTwig
+			Gosub, Check_tbt
 			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
 			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
 			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
@@ -141,7 +138,36 @@ curl_networkfile(tbt_version)
 	configString := "tbt_" . tbt_version . "Code"
 	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "network_file.txt"""
 	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
+	tbt_version := ""
 	return
 }
+;########################################################################################################################
+;########################################################################################################################
+
+folder_match_tbt(tbt_version)
+{
+	global
+	LoopObj := Object()
+	Loop, Read, % A_ScriptDir . "\data\" . tbt_version . "_networkfile.txt"
+	{
+		IfInString, A_LoopReadLine, NT:pm
+		{
+				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
+				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
+				LoopObj.Insert(SplitArray2[1])
+		}
+	}
+	SplitArray1 := ""
+	SplitArray2 := ""
+    Loop % LoopObj.length()
+    {
+        If(LoopObj[A_Index] = codebase_name)
+        {
+            "is_in_" . tbt_version := True 
+        }
+    }
+	return
+}
+
 ;########################################################################################################################
 ;########################################################################################################################

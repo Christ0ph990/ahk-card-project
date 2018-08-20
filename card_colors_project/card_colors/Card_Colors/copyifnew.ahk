@@ -47,36 +47,36 @@ CopyIfNewer(RemoteSource,LocalDestination)
 Gosub, Timer
 return
 
-CheckTrunk:
-trunk_LoopObj := Object()
-Loop, Read, %A_ScriptDir%\data\networkfile.txt
-{
-   IfInString, A_LoopReadLine, NT:pm
-   {
-		SplitArray1 := StrSplit(A_LoopReadLine, "`:")
-		SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-		;StringSplit, FirstSplit, A_LoopReadLine, `:
-		;StringSplit, SecondSplit, FirstSplit2, `-, " `t"
-		trunk_LoopObj.Insert(SplitArray2[1])
-   }
-}
-SplitArray1 := ""
-SplitArray2 := ""
+Check_tbt:
+update_Trunk := ""
+update_Branch := ""
+update_Twig := ""
 
-Loop % trunk_LoopObj.length()
+folder_match_tbt("Trunk")
+If(is_in_Trunk = True)
 {
-    If(trunk_LoopObj[A_Index] = codebase_name)
-    {
-        MsgBox % codebase_name . " should be the same as " . trunk_LoopObj[A_Index]
-    }
+    update_Trunk := True
+    LoopObj := ""
+    return
+}
+
+folder_match_tbt("Branch")
+If(is_in_Trunk = True)
+{
+    update_Trunk := True
+    LoopObj := ""
+    return
+}
+
+folder_match_tbt("Twig")
+If(is_in_Trunk = True)
+{
+    update_Trunk := True
+    LoopObj := ""
+    return
 }
 return
 
-;CheckBranch:
-;return
-;
-;CheckTwig:
-;return
 
 +Esc::
 ExitApp
