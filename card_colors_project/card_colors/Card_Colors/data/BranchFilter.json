@@ -1,0 +1,4 @@
+{
+	"name": "Z1.Branch Codebase Available",
+	"jql": "type = Sub-task AND (text~ 12306 OR text ~ pm12305 OR text ~ pm12304 OR text ~ pm12303 OR text ~ pm12302 OR text ~ pm12301)"
+}

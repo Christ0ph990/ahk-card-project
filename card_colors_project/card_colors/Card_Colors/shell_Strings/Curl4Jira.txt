@@ -1,0 +1,8 @@
+.\curl.exe `
+ --cacert cacert.pem `
+ -D headerdump.txt `
+ -u barnesc:Adsk#9900 `
+ -H "Content-Type: application/json" `
+ -X GET `
+ "https://jira.autodesk.com/rest/api/2/filter/100868" `
+ | .\jq-win64.exe . > output.txt `

@@ -1,0 +1,1 @@
+.\curl.exe -K "data\BranchConfig.txt" | .\jq-win64.exe . > output_folder\parsed_output.txt
