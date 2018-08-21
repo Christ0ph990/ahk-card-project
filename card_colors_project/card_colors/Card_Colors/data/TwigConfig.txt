@@ -1,7 +1,0 @@
-cacert="data\\cacert.pem"
-dump-header="data\\twig_headerdump.txt"
-user="barnesc:Adsk#9900"
-header="Content-Type: application/json"
-request="PUT"
-url="https://jira.autodesk.com/rest/api/2/filter/100880"
-data="data\\TwigFilter.json"

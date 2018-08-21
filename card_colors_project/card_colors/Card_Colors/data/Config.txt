@@ -1,7 +1,0 @@
-cacert="Data\\cacert.pem"
-dump-header="output_folder\\headerdump.txt"
-user="barnesc:Adsk#9900"
-header="Content-Type: application/json"
-request="PUT"
-url="https://jira.autodesk.com/rest/api/2/filter/100868"
-data="Data\\mydatafile.json"

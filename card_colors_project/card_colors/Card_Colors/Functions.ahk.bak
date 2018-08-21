@@ -6,10 +6,10 @@ UpdateJsonFiles()
 	update_trunk_json := ""
 	update_branch_json := ""
 	update_twig_json := ""
-	If(update_trunk = True)
+	If(update_Trunk = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
-		file := FileOpen(tbt_filepath, "w")
+		file := FileOpen(tbt_filepath, "w", `n)
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -32,10 +32,10 @@ UpdateJsonFiles()
 		
 	}
 	
-	If(update_branch = True)
+	If(update_Branch = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
-		file := FileOpen(tbt_filepath, "w")
+		file := FileOpen(tbt_filepath, "w", `n)
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -57,10 +57,10 @@ UpdateJsonFiles()
 		tbt_filepath := ""
 	}
 	
-	If(update_twig = True)
+	If(update_Twig = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
-		file := FileOpen(tbt_filepath, "w")
+		file := FileOpen(tbt_filepath, "w", `n)
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -71,7 +71,7 @@ UpdateJsonFiles()
 			If(A_Index = 70)
 			{
 				file.Writeline("text ~ " . LoopObj_Twig[A_Index] . ")""")
-			break
+				break
 			}
 		}
 		
@@ -135,6 +135,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 		}
 		if (copy_it = True) OR (file_exist = false)
 		{
+			Menu, Tray, Icon, %A_ScriptDir%\assets\copying.ico, 1
 			codebase_name := RemoteDateOrdName_Obj[A_Index]
 			Gosub, Check_tbt
 			
@@ -148,6 +149,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 				ExitApp
 			}
 			FileSetTime,, %LocalPath%, M, 2, 0
+			Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
 			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
 			Gosub, Update_json
 			Gosub, Curl_to_jira
@@ -224,7 +226,7 @@ curl_networkfile(tbt_version)
 {
 	global
 	configString := "tbt_" . tbt_version . "Code"
-	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "_networkfile.txt"""
+	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/network_responses/" . tbt_version "_networkfile.txt"""
 	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
 	tbt_version := ""
 	return
@@ -235,7 +237,8 @@ curl_networkfile(tbt_version)
 curl_jirajson(tbt_version)
 {
 	global
-	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\" . tbt_version . "parsed_output.txt", ,hide
+	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
+	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_output.txt", ,hide
 	tbt_version := ""
 	return
 }
@@ -247,7 +250,7 @@ folder_match_tbt(tbt_version)
 	global
 	current_obj_name := "LoopObj_" . tbt_version
 	%current_obj_name% := Object()
-	Loop, Read, % A_ScriptDir . "\data\" . tbt_version . "_networkfile.txt"
+	Loop, Read, % A_ScriptDir . "\data\network_responses\" . tbt_version . "_networkfile.txt"
 	{
 		IfInString, A_LoopReadLine, NT:pm
 		{
