@@ -56,24 +56,18 @@ folder_match_tbt("Trunk")
 If(is_in_Trunk = True)
 {
     update_Trunk := True
-    LoopObj := ""
-    return
 }
 
 folder_match_tbt("Branch")
 If(is_in_Branch = True)
 {
     update_Branch := True
-    LoopObj := ""
-    return
 }
 
 folder_match_tbt("Twig")
 If(is_in_Twig = True)
 {
     update_Twig := True
-    LoopObj := ""
-    return
 }
 return
 

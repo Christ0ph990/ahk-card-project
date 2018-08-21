@@ -1,8 +1,17 @@
 ;########################################################################################################################
-UpdateJiraFilters()
+UpdateJiraFilters(tbt_version)
 {
+	global
+	current_obj_name := "LoopObj_" . tbt_version
 	;At the moment when it gets here the RemoteDateOrdName_Obj still contains the cb names in each array cell. I can loop over this object and append the cells contents to the correct json file (using if update_twig =1 ... if update trunk = 1...) for a reasonable character limit.
 	;Then i just fire off the appropriate curl command based on the branch flag. and then its done!.
+	loop % curent_obj.name.length()
+	{
+		If(A_Index = 70)
+		{
+		break
+		}
+	}
 	Return
 }
 ;########################################################################################################################
@@ -155,25 +164,28 @@ curl_networkfile(tbt_version)
 folder_match_tbt(tbt_version)
 {
 	global
-	LoopObj := Object()
+	current_obj_name := "LoopObj_" . tbt_version
+	%current_obj_name% := Object()
 	Loop, Read, % A_ScriptDir . "\data\" . tbt_version . "_networkfile.txt"
 	{
 		IfInString, A_LoopReadLine, NT:pm
 		{
 				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
 				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-				LoopObj.Insert(SplitArray2[1])
+				%current_obj_name%.Insert(SplitArray2[1])
 		}
 	}
 	SplitArray1 := ""
 	SplitArray2 := ""
-    Loop % LoopObj.length()
+    Loop % %current_obj_name%.length()
     {
-        If(LoopObj[A_Index] = codebase_name)
+        If(%current_obj_name%[A_Index] = codebase_name)
         {
             is_in_%tbt_version% := True 
         }
     }
+	tbt_version := ""
+	current_obj_name :=
 	return
 }
 
