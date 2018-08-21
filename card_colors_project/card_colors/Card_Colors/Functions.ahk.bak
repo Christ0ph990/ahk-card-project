@@ -9,7 +9,7 @@ UpdateJsonFiles()
 	If(update_Trunk = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
-		file := FileOpen(tbt_filepath, "w", `n)
+		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -35,7 +35,7 @@ UpdateJsonFiles()
 	If(update_Branch = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
-		file := FileOpen(tbt_filepath, "w", `n)
+		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -60,7 +60,7 @@ UpdateJsonFiles()
 	If(update_Twig = True)
 	{
 		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
-		file := FileOpen(tbt_filepath, "w", `n)
+		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
 		file.Write(A_Tab . """jql"":""type = sub-task AND (")
@@ -80,7 +80,7 @@ UpdateJsonFiles()
 		update_twig_json := true
 		tbt_filepath := ""
 	}
-	Return
+Return
 }
 ;########################################################################################################################
 ;########################################################################################################################
@@ -265,7 +265,7 @@ folder_match_tbt(tbt_version)
     {
         If(%current_obj_name%[A_Index] = codebase_name)
         {
-            is_in_%tbt_version% := True 
+            "is_in_" . tbt_version := True 
         }
     }
 	tbt_version := ""

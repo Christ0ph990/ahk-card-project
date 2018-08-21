@@ -80,7 +80,7 @@ UpdateJsonFiles()
 		update_twig_json := true
 		tbt_filepath := ""
 	}
-	Return
+Return
 }
 ;########################################################################################################################
 ;########################################################################################################################
@@ -245,7 +245,7 @@ curl_jirajson(tbt_version)
 ;########################################################################################################################
 ;########################################################################################################################
 
-folder_match_tbt(tbt_version)
+folder_match_tbt(tbt_version)   ;;;;;; I THINK THE PROBLEM IS IN THIS FUNCTION ;;;;;
 {
 	global
 	current_obj_name := "LoopObj_" . tbt_version
@@ -265,7 +265,7 @@ folder_match_tbt(tbt_version)
     {
         If(%current_obj_name%[A_Index] = codebase_name)
         {
-            is_in_%tbt_version% := True 
+            "is_in_" . tbt_version := True 
         }
     }
 	tbt_version := ""
