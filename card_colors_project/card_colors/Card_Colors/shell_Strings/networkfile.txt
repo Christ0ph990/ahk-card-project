@@ -1,1 +1,0 @@
- curl file:////bullring/devbase/devdisk/dmk/configs/pm20191/files/closed.html -o "output_folder//networkfile.txt"

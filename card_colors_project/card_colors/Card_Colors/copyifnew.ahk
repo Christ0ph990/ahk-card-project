@@ -27,7 +27,6 @@ curl_networkfile("Branch")
 curl_networkfile("Twig")
 
 CopyIfNewer(RemoteSource,LocalDestination)
-;UpdateJiraFilters()
 SetTimer, Timer, -500
 return
 ;############################################################################################
@@ -71,6 +70,24 @@ If(is_in_Twig = True)
 }
 return
 
+Update_json:
+UpdateJsonFiles()
+return
+
+Curl_to_jira:
+If(update_trunk = true)
+{
+    curl_jirajson("Trunk")
+}
+If(update_branch = true)
+{
+    curl_jirajson("Branch")
+}
+If(update_twig = true)
+{
+    curl_jirajson("Twig")
+}
+return
 
 +Esc::
 ExitApp

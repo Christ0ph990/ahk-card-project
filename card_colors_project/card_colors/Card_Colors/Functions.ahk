@@ -1,16 +1,84 @@
 ;########################################################################################################################
-UpdateJiraFilters(tbt_version)
+UpdateJsonFiles()
 {
 	global
-	current_obj_name := "LoopObj_" . tbt_version
-	;At the moment when it gets here the RemoteDateOrdName_Obj still contains the cb names in each array cell. I can loop over this object and append the cells contents to the correct json file (using if update_twig =1 ... if update trunk = 1...) for a reasonable character limit.
-	;Then i just fire off the appropriate curl command based on the branch flag. and then its done!.
-	loop % curent_obj.name.length()
+	tbt_filepath := ""
+	update_trunk_json := ""
+	update_branch_json := ""
+	update_twig_json := ""
+	If(update_trunk = True)
 	{
-		If(A_Index = 70)
+		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
+		file := FileOpen(tbt_filepath, "w")
+		file.Writeline("{")
+		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
+		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		
+		loop % LoopObj_Trunk.length()
 		{
-		break
+			file.Write("text ~ " . LoopObj_Trunk[A_Index] . " OR ")
+			
+			If(A_Index = 70)
+			{
+				file.Writeline("text ~ " . LoopObj_Trunk[A_Index] . ")""")
+				break
+			}
 		}
+		
+		file.Writeline("}")
+		file.close()
+		update_trunk_json := true
+		tbt_filepath := ""
+		
+	}
+	
+	If(update_branch = True)
+	{
+		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
+		file := FileOpen(tbt_filepath, "w")
+		file.Writeline("{")
+		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
+		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		
+		loop % LoopObj_Branch.length()
+		{
+			file.Write("text ~ " . LoopObj_Branch[A_Index] . " OR ")
+			
+			If(A_Index = 70)
+			{
+				file.Writeline("text ~ " . LoopObj_Branch[A_Index] . ")""")
+				break
+			}
+		}
+		
+		file.Writeline("}")
+		file.close()
+		update_branch_json := true
+		tbt_filepath := ""
+	}
+	
+	If(update_twig = True)
+	{
+		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
+		file := FileOpen(tbt_filepath, "w")
+		file.Writeline("{")
+		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
+		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		
+		loop % LoopObj_Twig.length()
+		{
+			file.Write("text ~ " . LoopObj_Twig[A_Index] . " OR ")
+			If(A_Index = 70)
+			{
+				file.Writeline("text ~ " . LoopObj_Twig[A_Index] . ")""")
+			break
+			}
+		}
+		
+		file.Writeline("}")
+		file.close()
+		update_twig_json := true
+		tbt_filepath := ""
 	}
 	Return
 }
@@ -19,9 +87,9 @@ UpdateJiraFilters(tbt_version)
 CopyIfNewer(RemoteDir,LocalDir)
 {
 	global
-	copy_happen := False
+	copy_happen := ""
     codebase_name := ""
-	RemoteFolderNames :=
+	RemoteFolderNames := ""
 	RemoteDateOrdName_Obj := Object()
 	RemoteDateOrdTime_Obj := Object()
 	
@@ -69,6 +137,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 		{
 			codebase_name := RemoteDateOrdName_Obj[A_Index]
 			Gosub, Check_tbt
+			
 			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
 			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
 			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
@@ -80,6 +149,8 @@ CopyIfNewer(RemoteDir,LocalDir)
 			}
 			FileSetTime,, %LocalPath%, M, 2, 0
 			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
+			Gosub, Update_json
+			Gosub, Curl_to_jira
 		}
 	}
     codebase_name := ""
@@ -155,6 +226,16 @@ curl_networkfile(tbt_version)
 	configString := "tbt_" . tbt_version . "Code"
 	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/" . tbt_version "_networkfile.txt"""
 	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
+	tbt_version := ""
+	return
+}
+;########################################################################################################################
+;########################################################################################################################
+
+curl_jirajson(tbt_version)
+{
+	global
+	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\" . tbt_version . "parsed_output.txt", ,hide
 	tbt_version := ""
 	return
 }

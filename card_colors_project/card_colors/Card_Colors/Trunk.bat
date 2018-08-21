@@ -1,1 +1,0 @@
-.\curl.exe -K "data\TrunkConfig.txt" | .\jq-win64.exe . > output_folder\parsed_output.txt

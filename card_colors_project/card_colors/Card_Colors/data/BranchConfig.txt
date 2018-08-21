@@ -1,5 +1,5 @@
 cacert="data\\cacert.pem"
-dump-header="output_folder\\headerdump.txt"
+dump-header="data\\branch_headerdump.txt"
 user="barnesc:Adsk#9900"
 header="Content-Type: application/json"
 request="PUT"

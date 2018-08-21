@@ -1,0 +1,5 @@
+{
+  "errorMessages": [
+    "Unexpected character ('d' (code 100)): expected a valid value (number, String, array, object, 'true', 'false' or 'null')\n at [Source: org.apache.catalina.connector.CoyoteInputStream@71777627; line: 1, column: 2]"
+  ]
+}
