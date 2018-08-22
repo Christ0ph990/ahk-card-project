@@ -12,13 +12,13 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
 		
 		loop % LoopObj_Trunk.length()
 		{
 			file.Write("text ~ " . LoopObj_Trunk[A_Index] . " OR ")
 			
-			If(A_Index = 70)
+			If(A_Index = 10)
 			{
 				file.Writeline("text ~ " . LoopObj_Trunk[A_Index] . ")""")
 				break
@@ -38,7 +38,7 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
 		
 		loop % LoopObj_Branch.length()
 		{
@@ -63,7 +63,7 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND (")
+		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
 		
 		loop % LoopObj_Twig.length()
 		{
@@ -118,6 +118,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 		file_exist := false
 		copy_it := False
 		codebase_name := ""
+		pmill2pm := ""
 		file_exist := FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index])
 		if (FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]))
 		{
@@ -136,7 +137,8 @@ CopyIfNewer(RemoteDir,LocalDir)
 		if (copy_it = True) OR (file_exist = false)
 		{
 			Menu, Tray, Icon, %A_ScriptDir%\assets\copying.ico, 1
-			codebase_name := RemoteDateOrdName_Obj[A_Index]
+			pmill2pm := StrReplace(RemoteDateOrdName_Obj[A_Index],"powermill", "pm")
+			codebase_name := pmill2pm
 			Gosub, Check_tbt
 			
 			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
@@ -256,9 +258,9 @@ folder_match_tbt(tbt_version)
 		{
 				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
 				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-				pm2pmill := StrReplace(SplitArray2[1], "pm", "powermill")
-				;%current_obj_name%.Insert(SplitArray2[1])
-				%current_obj_name%.Insert(pm2pmill)
+				;pm2pmill := StrReplace(SplitArray2[1], "pm", "powermill")
+				%current_obj_name%.Insert(SplitArray2[1])
+				;%current_obj_name%.Insert(pm2pmill)
 		}
 	}
 	SplitArray1 := ""
