@@ -12,7 +12,7 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
+		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
 		
 		loop % LoopObj_Trunk.length()
 		{
@@ -38,13 +38,13 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
+		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
 		
 		loop % LoopObj_Branch.length()
 		{
 			file.Write("text ~ " . LoopObj_Branch[A_Index] . " OR ")
 			
-			If(A_Index = 70)
+			If(A_Index = 10)
 			{
 				file.Writeline("text ~ " . LoopObj_Branch[A_Index] . ")""")
 				break
@@ -63,12 +63,12 @@ UpdateJsonFiles()
 		file := FileOpen(tbt_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
-		file.Write(A_Tab . """jql"":""type = sub-task AND filter = ""Filter for QA board"" AND (")
+		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
 		
 		loop % LoopObj_Twig.length()
 		{
 			file.Write("text ~ " . LoopObj_Twig[A_Index] . " OR ")
-			If(A_Index = 70)
+			If(A_Index = 10)
 			{
 				file.Writeline("text ~ " . LoopObj_Twig[A_Index] . ")""")
 				break

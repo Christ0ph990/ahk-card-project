@@ -1,5 +1,0 @@
-{
-  "errorMessages": [
-    "Unexpected character ('F' (code 70)): was expecting comma to separate OBJECT entries\n at [Source: org.apache.catalina.connector.CoyoteInputStream@3a5c04b1; line: 1, column: 77]"
-  ]
-}
