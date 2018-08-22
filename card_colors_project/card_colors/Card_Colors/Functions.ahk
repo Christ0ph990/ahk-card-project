@@ -245,7 +245,7 @@ curl_jirajson(tbt_version)
 ;########################################################################################################################
 ;########################################################################################################################
 
-folder_match_tbt(tbt_version)   ;;;;;; I THINK THE PROBLEM IS IN THIS FUNCTION ;;;;;
+folder_match_tbt(tbt_version)
 {
 	global
 	current_obj_name := "LoopObj_" . tbt_version
@@ -256,22 +256,26 @@ folder_match_tbt(tbt_version)   ;;;;;; I THINK THE PROBLEM IS IN THIS FUNCTION ;
 		{
 				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
 				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-				%current_obj_name%.Insert(SplitArray2[1])
+				pm2pmill := StrReplace(SplitArray2[1], "pm", "powermill")
+				;%current_obj_name%.Insert(SplitArray2[1])
+				%current_obj_name%.Insert(pm2pmill)
 		}
 	}
 	SplitArray1 := ""
 	SplitArray2 := ""
+	pm2pmill := ""
     Loop % %current_obj_name%.length()
     {
         If(%current_obj_name%[A_Index] = codebase_name)
         {
-            "is_in_" . tbt_version := True 
+            is_in_%tbt_version% := True 
         }
     }
 	tbt_version := ""
 	current_obj_name :=
 	return
 }
+
 
 ;########################################################################################################################
 ;########################################################################################################################

@@ -256,7 +256,9 @@ folder_match_tbt(tbt_version)
 		{
 				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
 				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-				%current_obj_name%.Insert(SplitArray2[1])
+				pm2pmill := StrReplace(SplitArray2[1], "pm", "powermill")
+				;%current_obj_name%.Insert(SplitArray2[1])
+				%current_obj_name%.Insert(pm2pmill)
 		}
 	}
 	SplitArray1 := ""
@@ -265,13 +267,14 @@ folder_match_tbt(tbt_version)
     {
         If(%current_obj_name%[A_Index] = codebase_name)
         {
-            "is_in_" . tbt_version := True 
+            is_in_%tbt_version% := True 
         }
     }
 	tbt_version := ""
 	current_obj_name :=
 	return
 }
+
 
 ;########################################################################################################################
 ;########################################################################################################################
