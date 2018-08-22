@@ -16,11 +16,11 @@ UpdateJsonFiles()
 		
 		loop % LoopObj_Trunk.length()
 		{
-			file.Write("text ~ " . LoopObj_Trunk[A_Index] . " OR ")
+			file.Write("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"" OR ")
 			
-			If(A_Index = 10)
+			If(A_Index = 20)
 			{
-				file.Writeline("text ~ " . LoopObj_Trunk[A_Index] . ")""")
+				file.Writeline("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"")""")
 				break
 			}
 		}
@@ -42,11 +42,11 @@ UpdateJsonFiles()
 		
 		loop % LoopObj_Branch.length()
 		{
-			file.Write("text ~ " . LoopObj_Branch[A_Index] . " OR ")
+			file.Write("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"" OR ")
 			
-			If(A_Index = 10)
+			If(A_Index = 20)
 			{
-				file.Writeline("text ~ " . LoopObj_Branch[A_Index] . ")""")
+				file.Writeline("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"")""")
 				break
 			}
 		}
@@ -67,10 +67,10 @@ UpdateJsonFiles()
 		
 		loop % LoopObj_Twig.length()
 		{
-			file.Write("text ~ " . LoopObj_Twig[A_Index] . " OR ")
-			If(A_Index = 10)
+			file.Write("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"" OR ")
+			If(A_Index = 20)
 			{
-				file.Writeline("text ~ " . LoopObj_Twig[A_Index] . ")""")
+				file.Writeline("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"")""")
 				break
 			}
 		}
