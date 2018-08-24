@@ -84,6 +84,33 @@ Return
 }
 ;########################################################################################################################
 ;########################################################################################################################
+Get_jira_issues(tbt_version)
+{
+	global
+	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
+	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "_search_config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json", ,hide
+	tbt_version := ""
+	return
+}
+
+;########################################################################################################################
+;########################################################################################################################
+Loop_file_extract_data_to_array(file_path_to_read,line_identifier, split_delimiter, split_array_number_to_extract,tbt_version)
+{
+	global
+	tbt_version . "_FileExtractLoopObj" := object()
+	Loop, Read, %file_path_to_read%
+	{
+		If(InStr(A_LoopReadLine, line_identifier, True))
+		{
+			tbt_version_FileExtractLoopSplit := StrSplit(A_LoopReadLine, split_delimiter, " \t")
+			tbt_version_FileExtractLoopObj.push(LoopSplit[split_array_number_to_extract])
+		}
+	}
+return
+}
+;########################################################################################################################
+;########################################################################################################################
 CopyIfNewer(RemoteDir,LocalDir)
 {
 	global
@@ -240,7 +267,21 @@ curl_jirajson(tbt_version)
 {
 	global
 	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
-	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_output.txt", ,hide
+	Loop % LoopObj.length()
+	{
+		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
+		file := FileOpen(curldata_filepath, "w `n")
+		file.Writeline("{")
+		file.Writeline(A_Tab . """issueKey"":""" . LoopObj[A_Index] . """,")
+		file.Writeline(A_Tab . """propertyKey"":""" . tbt_version ".cb.ready"",")
+		file.Writeline(A_Tab . """propertyValue"":""yes"",")
+		file.Writeline(A_Tab . """mask"":false")
+		file.Writeline("}")
+		file.close()
+		
+		RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\jiraprops.txt""", , hide
+	}
+	;RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_output.txt", ,hide
 	tbt_version := ""
 	return
 }

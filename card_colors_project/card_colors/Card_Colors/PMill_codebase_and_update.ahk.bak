@@ -125,15 +125,12 @@ return
 Curl_to_jira:
 If(update_Trunk = True)
 {
-    curl_jirajson("Trunk")
 }
 If(update_Branch = True)
 {
-    curl_jirajson("Branch")
 }
 If(update_Twig = True)
 {
-    curl_jirajson("Twig")
 }
 ;If(update_trunk_json = true)
 ;{

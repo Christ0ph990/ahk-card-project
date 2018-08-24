@@ -1,0 +1,8 @@
+cacert="data\\cacert.pem"
+dump-header="data\\network_responses\\trunk_headerdump.txt"
+user="barnesc:Adsk#990-"
+header="Accept: application/json"
+header="Content-Type: application/json"
+request="POST"
+data="@data\\configs\\Trunk_search_filter.json"
+url="https://jira.autodesk.com/rest/api/2/search"
