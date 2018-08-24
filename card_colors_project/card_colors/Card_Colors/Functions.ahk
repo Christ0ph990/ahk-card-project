@@ -1,87 +1,87 @@
 ;########################################################################################################################
-UpdateJsonFiles()
-{
-	global
-	tbt_filepath := ""
-	update_trunk_json := ""
-	update_branch_json := ""
-	update_twig_json := ""
-	If(update_Trunk = True)
-	{
-		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
-		file := FileOpen(tbt_filepath, "w `n")
-		file.Writeline("{")
-		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
-		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-		
-		loop % LoopObj_Trunk.length()
-		{
-			file.Write("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"" OR ")
-			
-			If(A_Index = 20)
-			{
-				file.Writeline("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"")""")
-				break
-			}
-		}
-		
-		file.Writeline("}")
-		file.close()
-		update_trunk_json := true
-		tbt_filepath := ""
-		
-	}
-	
-	If(update_Branch = True)
-	{
-		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
-		file := FileOpen(tbt_filepath, "w `n")
-		file.Writeline("{")
-		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
-		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-		
-		loop % LoopObj_Branch.length()
-		{
-			file.Write("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"" OR ")
-			
-			If(A_Index = 20)
-			{
-				file.Writeline("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"")""")
-				break
-			}
-		}
-		
-		file.Writeline("}")
-		file.close()
-		update_branch_json := true
-		tbt_filepath := ""
-	}
-	
-	If(update_Twig = True)
-	{
-		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
-		file := FileOpen(tbt_filepath, "w `n")
-		file.Writeline("{")
-		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
-		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-		
-		loop % LoopObj_Twig.length()
-		{
-			file.Write("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"" OR ")
-			If(A_Index = 20)
-			{
-				file.Writeline("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"")""")
-				break
-			}
-		}
-		
-		file.Writeline("}")
-		file.close()
-		update_twig_json := true
-		tbt_filepath := ""
-	}
-Return
-}
+;UpdateJsonFiles()
+;{
+;	global
+;	tbt_filepath := ""
+;	update_trunk_json := ""
+;	update_branch_json := ""
+;	update_twig_json := ""
+;	If(update_Trunk = True)
+;	{
+;		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
+;		file := FileOpen(tbt_filepath, "w `n")
+;		file.Writeline("{")
+;		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
+;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
+;		
+;		loop % LoopObj_Trunk.length()
+;		{
+;			file.Write("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"" OR ")
+;			
+;			If(A_Index = 20)
+;			{
+;				file.Writeline("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"")""")
+;				break
+;			}
+;		}
+;		
+;		file.Writeline("}")
+;		file.close()
+;		update_trunk_json := true
+;		tbt_filepath := ""
+;		
+;	}
+;	
+;	If(update_Branch = True)
+;	{
+;		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
+;		file := FileOpen(tbt_filepath, "w `n")
+;		file.Writeline("{")
+;		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
+;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
+;		
+;		loop % LoopObj_Branch.length()
+;		{
+;			file.Write("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"" OR ")
+;			
+;			If(A_Index = 20)
+;			{
+;				file.Writeline("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"")""")
+;				break
+;			}
+;		}
+;		
+;		file.Writeline("}")
+;		file.close()
+;		update_branch_json := true
+;		tbt_filepath := ""
+;	}
+;	
+;	If(update_Twig = True)
+;	{
+;		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
+;		file := FileOpen(tbt_filepath, "w `n")
+;		file.Writeline("{")
+;		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
+;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
+;		
+;		loop % LoopObj_Twig.length()
+;		{
+;			file.Write("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"" OR ")
+;			If(A_Index = 20)
+;			{
+;				file.Writeline("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"")""")
+;				break
+;			}
+;		}
+;		
+;		file.Writeline("}")
+;		file.close()
+;		update_twig_json := true
+;		tbt_filepath := ""
+;	}
+;Return
+;}
 ;########################################################################################################################
 ;########################################################################################################################
 Get_jira_issues(tbt_version)
@@ -98,16 +98,19 @@ Get_jira_issues(tbt_version)
 Loop_file_extract_data_to_array(file_path_to_read,line_identifier, split_delimiter, split_array_number_to_extract,tbt_version)
 {
 	global
-	tbt_version . "_FileExtractLoopObj" := object()
+	current_obj_name := "FileExtractLoopObj_" . tbt_version 
+	%current_obj_name% := object()
 	Loop, Read, %file_path_to_read%
 	{
 		If(InStr(A_LoopReadLine, line_identifier, True))
 		{
-			tbt_version_FileExtractLoopSplit := StrSplit(A_LoopReadLine, split_delimiter, " \t")
-			tbt_version_FileExtractLoopObj.push(LoopSplit[split_array_number_to_extract])
+			LoopSplit := StrSplit(A_LoopReadLine, split_delimiter, " \t")
+			%current_obj_name%.push(LoopSplit[split_array_number_to_extract])
 		}
 	}
-return
+	tbt_version := ""
+	current_obj_name := ""
+	return
 }
 ;########################################################################################################################
 ;########################################################################################################################
@@ -171,6 +174,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
 			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
 			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
 			FileCopyDir, %RemotePath%, %LocalPath%, 1   																; Copy with overwrite=yes
 			if ErrorLevel
 			{
@@ -179,8 +183,9 @@ CopyIfNewer(RemoteDir,LocalDir)
 			}
 			FileSetTime,, %LocalPath%, M, 2, 0
 			Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
-			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
-			Gosub, Update_json
+			;Gosub, Update_json
+			Gosub, Curl_issues_from_jira
+			Gosub, Extract_issue_keys_from_filter
 			Gosub, Curl_to_jira
 		}
 	}
@@ -267,7 +272,9 @@ curl_jirajson(tbt_version)
 {
 	global
 	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
-	Loop % %tbt_version% . "FileExtract"LoopObj.length()
+	current_obj_name := "FileExtractLoopObj_" . tbt_version
+	%current_obj_name% := Object()
+	Loop % %current_obj_name%.length()
 	{
 		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
 		file := FileOpen(curldata_filepath, "w `n")
@@ -279,10 +286,11 @@ curl_jirajson(tbt_version)
 		file.Writeline("}")
 		file.close()
 		
-		RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\jiraprops.txt""", , hide
+		RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_response.json", , hide
 	}
 	;RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_output.txt", ,hide
 	tbt_version := ""
+	current_obj_name := ""
 	return
 }
 ;########################################################################################################################
@@ -299,14 +307,11 @@ folder_match_tbt(tbt_version)
 		{
 				SplitArray1 := StrSplit(A_LoopReadLine, "`:")
 				SplitArray2 := StrSplit(SplitArray1[2],"`-", " `t")
-				;pm2pmill := StrReplace(SplitArray2[1], "pm", "powermill")
 				%current_obj_name%.Insert(SplitArray2[1])
-				;%current_obj_name%.Insert(pm2pmill)
 		}
 	}
 	SplitArray1 := ""
 	SplitArray2 := ""
-	pm2pmill := ""
     Loop % %current_obj_name%.length()
     {
         If(%current_obj_name%[A_Index] = codebase_name)
@@ -315,7 +320,7 @@ folder_match_tbt(tbt_version)
         }
     }
 	tbt_version := ""
-	current_obj_name :=
+	current_obj_name := ""
 	return
 }
 

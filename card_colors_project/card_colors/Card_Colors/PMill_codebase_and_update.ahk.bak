@@ -101,36 +101,43 @@ If(update_Twig = True)
 return
 
 Extract_issue_keys_from_filter:
-arg1 := 
+arg1 := ""
 arg2 := """key"":"
 arg3 := """"
 arg4 := 4
+arg5 := ""
 If(update_Trunk = True)
 {
-    arg1 := A_ScriptDir . "\data\network_responses\Trunk_search_parsed_output.json" 
-    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4)
+    arg1 := A_ScriptDir . "\data\network_responses\Trunk_search_parsed_output.json"
+    arg5 := "Trunk"
+    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4, arg5)
 }
 If(update_Branch = True)
 {
-    arg1 := A_ScriptDir . "\data\network_responses\Branch_search_parsed_output.json" 
-    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4)
+    arg1 := A_ScriptDir . "\data\network_responses\Branch_search_parsed_output.json"
+    arg5 := "Branch"
+    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4, arg5)
 }
 If(update_Twig = True)
 {
-    arg1 := A_ScriptDir . "\data\network_responses\Twig_search_parsed_output.json" 
-    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4)
+    arg1 := A_ScriptDir . "\data\network_responses\Twig_search_parsed_output.json"
+    arg5 := "Twig"
+    Loop_file_extract_data_to_array(arg1, arg2, arg3, arg4, arg5)
 }
 return
 
 Curl_to_jira:
 If(update_Trunk = True)
 {
+    curl_jirajson("Trunk")
 }
 If(update_Branch = True)
 {
+    curl_jirajson("Branch")
 }
 If(update_Twig = True)
 {
+    curl_jirajson("Twig")
 }
 ;If(update_trunk_json = true)
 ;{
