@@ -16,18 +16,18 @@
     "displayName": "Christopher Barnes",
     "active": true
   },
-  "jql": "filter = 101209 AND (text ~ \"is in pm2019103\" OR text ~ \"is in pm2019102\" OR text ~ \"is in pm2019101\" OR text ~ \"is in pm2231067\" OR text ~ \"is in pm2231066\" OR text ~ \"is in pm2231065\" OR text ~ \"is in pm2231064\" OR text ~ \"is in pm2231063\" OR text ~ \"is in pm2231062\" OR text ~ \"is in pm2231061\" OR text ~ \"is in pm2231060\" OR text ~ \"is in pm2231059\" OR text ~ \"is in pm2231058\" OR text ~ \"is in pm2231057\" OR text ~ \"is in pm2231056\" OR text ~ \"is in pm2231055\" OR text ~ \"is in pm2231054\" OR text ~ \"is in pm2231053\" OR text ~ \"is in pm2231052\" OR text ~ \"is in pm2231051\" OR text ~ \"is in pm2231050\" OR text ~ \"is in pm2231049\" OR text ~ \"is in pm2231048\" OR text ~ \"is in pm2231047\" OR text ~ \"is in pm2231046\" OR text ~ \"is in pm2231045\" OR text ~ \"is in pm2231044\" OR text ~ \"is in pm2231043\" OR text ~ \"is in pm2231042\" OR text ~ \"is in pm2231041\" OR text ~ \"is in pm2231041\")",
+  "jql": "filter = 101209 AND (comment ~ \"is in pm2019104\" OR comment ~ \"is in pm2019103\" OR comment ~ \"is in pm2019102\" OR comment ~ \"is in pm2019101\" OR comment ~ \"is in pm2231067\" OR comment ~ \"is in pm2231066\" OR comment ~ \"is in pm2231065\" OR comment ~ \"is in pm2231064\" OR comment ~ \"is in pm2231063\" OR comment ~ \"is in pm2231062\" OR comment ~ \"is in pm2231061\" OR comment ~ \"is in pm2231060\" OR comment ~ \"is in pm2231059\" OR comment ~ \"is in pm2231058\" OR comment ~ \"is in pm2231057\" OR comment ~ \"is in pm2231056\" OR comment ~ \"is in pm2231055\" OR comment ~ \"is in pm2231054\" OR comment ~ \"is in pm2231053\" OR comment ~ \"is in pm2231052\" OR comment ~ \"is in pm2231052\")",
   "viewUrl": "https://jira.autodesk.com/issues/?filter=100880",
-  "searchUrl": "https://jira.autodesk.com/rest/api/2/search?jql=filter+%3D+101209+AND+(text+~+%22is+in+pm2019103%22+OR+text+~+%22is+in+pm2019102%22+OR+text+~+%22is+in+pm2019101%22+OR+text+~+%22is+in+pm2231067%22+OR+text+~+%22is+in+pm2231066%22+OR+text+~+%22is+in+pm2231065%22+OR+text+~+%22is+in+pm2231064%22+OR+text+~+%22is+in+pm2231063%22+OR+text+~+%22is+in+pm2231062%22+OR+text+~+%22is+in+pm2231061%22+OR+text+~+%22is+in+pm2231060%22+OR+text+~+%22is+in+pm2231059%22+OR+text+~+%22is+in+pm2231058%22+OR+text+~+%22is+in+pm2231057%22+OR+text+~+%22is+in+pm2231056%22+OR+text+~+%22is+in+pm2231055%22+OR+text+~+%22is+in+pm2231054%22+OR+text+~+%22is+in+pm2231053%22+OR+text+~+%22is+in+pm2231052%22+OR+text+~+%22is+in+pm2231051%22+OR+text+~+%22is+in+pm2231050%22+OR+text+~+%22is+in+pm2231049%22+OR+text+~+%22is+in+pm2231048%22+OR+text+~+%22is+in+pm2231047%22+OR+text+~+%22is+in+pm2231046%22+OR+text+~+%22is+in+pm2231045%22+OR+text+~+%22is+in+pm2231044%22+OR+text+~+%22is+in+pm2231043%22+OR+text+~+%22is+in+pm2231042%22+OR+text+~+%22is+in+pm2231041%22+OR+text+~+%22is+in+pm2231041%22)",
+  "searchUrl": "https://jira.autodesk.com/rest/api/2/search?jql=filter+%3D+101209+AND+(comment+~+%22is+in+pm2019104%22+OR+comment+~+%22is+in+pm2019103%22+OR+comment+~+%22is+in+pm2019102%22+OR+comment+~+%22is+in+pm2019101%22+OR+comment+~+%22is+in+pm2231067%22+OR+comment+~+%22is+in+pm2231066%22+OR+comment+~+%22is+in+pm2231065%22+OR+comment+~+%22is+in+pm2231064%22+OR+comment+~+%22is+in+pm2231063%22+OR+comment+~+%22is+in+pm2231062%22+OR+comment+~+%22is+in+pm2231061%22+OR+comment+~+%22is+in+pm2231060%22+OR+comment+~+%22is+in+pm2231059%22+OR+comment+~+%22is+in+pm2231058%22+OR+comment+~+%22is+in+pm2231057%22+OR+comment+~+%22is+in+pm2231056%22+OR+comment+~+%22is+in+pm2231055%22+OR+comment+~+%22is+in+pm2231054%22+OR+comment+~+%22is+in+pm2231053%22+OR+comment+~+%22is+in+pm2231052%22+OR+comment+~+%22is+in+pm2231052%22)",
   "favourite": true,
   "sharePermissions": [
     {
-      "id": 119766,
+      "id": 119912,
       "type": "loggedin"
     }
   ],
   "sharedUsers": {
-    "size": 7669,
+    "size": 7684,
     "items": [],
     "max-results": 1000,
     "start-index": 0,
