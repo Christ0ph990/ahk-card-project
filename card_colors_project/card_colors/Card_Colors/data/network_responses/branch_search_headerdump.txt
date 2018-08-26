@@ -1,0 +1,20 @@
+HTTP/1.1 200 
+Cache-Control: no-cache, no-store, no-transform
+Content-Security-Policy: frame-ancestors 'self'
+Content-Type: application/json;charset=UTF-8
+Date: Sun, 26 Aug 2018 11:08:37 GMT
+Set-Cookie: JSESSIONID=E17540350CE77BB86AF3AA26D7895053;path=/;Secure;HttpOnly
+Set-Cookie: atlassian.xsrf.token=AW3D-A1MI-HVSF-Y2C1|7e2f0e8351b9f4ae1d221e57e33e7414c2db6ce1|lin;path=/;Secure
+Set-Cookie: AWSELB=9B4715EF10C7E599CA7D258D9BA7AFE97F82C93ADB1AB0E169637A8DB88791EBAE5A787BE90FFA581E1E1FD209E3107E43E4B58B6809C2E61AA7D339DE45E6628D2C4740AA547B8A1A159F1C8DA92DF74C0CB48FD4;PATH=/;SECURE;HTTPONLY
+X-ANODEID: i-0224272da01fbdd81
+X-AREQUESTID: 668x3726407x1
+X-ASEN: SEN-11627845
+X-ASESSIONID: r2gta9
+X-AUSERNAME: barnesc
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Seraph-LoginReason: OK
+X-XSS-Protection: 1; mode=block
+transfer-encoding: chunked
+Connection: keep-alive
+

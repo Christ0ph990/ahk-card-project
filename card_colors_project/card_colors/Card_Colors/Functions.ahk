@@ -122,7 +122,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 	RemoteFolderNames := ""
 	RemoteDateOrdName_Obj := Object()
 	RemoteDateOrdTime_Obj := Object()
-	
+	Menu,Tray, Tip, Local Codebase: Getting remote folder names.
 	Loop, Files, %RemoteDir%\*, D
 	{
 		RemoteFolderNames := RemoteFolderNames . A_LoopFileTimeModified . "`t" . A_LoopFileName . "`n"
@@ -143,6 +143,7 @@ CopyIfNewer(RemoteDir,LocalDir)
 	RemoteFolderNames := ""
 	RemoteFolderArray := ""
 	
+	Menu,Tray, Tip, Local Codebase: Checking remote names against local names.
 	Loop % RemoteDateOrdName_Obj.length()
 	{
 		file_exist := false
@@ -174,8 +175,8 @@ CopyIfNewer(RemoteDir,LocalDir)
 			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
 			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
 			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
-			;FileCreateDir, %LocalDir%\%A_LoopFileName%																	; Uncomment this line to initialise the local area with empty folders.
-			FileCopyDir, %RemotePath%, %LocalPath%, 1   																; Copy with overwrite=yes
+			FileCreateDir, %LocalPath%																					; Uncomment this line to initialise the local area with empty folders.
+			;FileCopyDir, %RemotePath%, %LocalPath%, 1   																; Copy with overwrite=yes
 			if ErrorLevel
 			{
 				MsgBox, Could not copy "%RemotePath%" to "%LocalPath%".
@@ -206,6 +207,8 @@ Get_tbt_versions()
 	tbt_FolderArray := ""
 	tbt_FolderNameObj := Object()
 	tbt_FolderTimeObj := Object()
+	Menu,Tray, Tip, Local Codebase: Retrieving  tbt information.
+
 	
 	Loop, Files, \\bullring\devbase\devdisk\dmk\configs\*, D
 	{
@@ -259,6 +262,7 @@ Get_tbt_versions()
 curl_networkfile(tbt_version)
 {
 	global
+	Menu,Tray, Tip, Local Codebase: Downloading //bullring/devbase/devdisk/dmk/configs/%tbt_version%.html.
 	configString := "tbt_" . tbt_version . "Code"
 	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/network_responses/" . tbt_version "_networkfile.txt"""
 	RunWait % "PowerShell.exe -Command ""& {" . curlString . "}""", , Hide
@@ -272,14 +276,15 @@ curl_jirajson(tbt_version)
 {
 	global
 	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
+	;current_obj_name := FileExtractLoopObj_tbt_version()
 	current_obj_name := "FileExtractLoopObj_" . tbt_version
-	%current_obj_name% := Object()
+	;%current_obj_name% := Object()
 	Loop % %current_obj_name%.length()
 	{
 		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
 		file := FileOpen(curldata_filepath, "w `n")
 		file.Writeline("{")
-		file.Writeline(A_Tab . """issueKey"":""" . LoopObj[A_Index] . """,")
+		file.Writeline(A_Tab . """issueKey"":""" . %current_obj_name%[A_Index] . """,")
 		file.Writeline(A_Tab . """propertyKey"":""" . tbt_version ".cb.ready"",")
 		file.Writeline(A_Tab . """propertyValue"":""yes"",")
 		file.Writeline(A_Tab . """mask"":false")
@@ -327,3 +332,15 @@ folder_match_tbt(tbt_version)
 
 ;########################################################################################################################
 ;########################################################################################################################
+
+HideTrayTip()
+{
+	Sleep, 2000
+    TrayTip  ; Attempt to hide it the normal way.
+    if SubStr(A_OSVersion,1,3) = "10." {
+        Menu Tray, NoIcon
+        Sleep 200  ; It may be necessary to adjust this sleep.
+        Menu Tray, Icon
+		Menu, Tray, Tip, HideTrayTip
+    }
+}

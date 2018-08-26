@@ -14,12 +14,20 @@ SetFormat, float, 0.2
 ;############################################################################################
 ;                  ################## AUTOEXECUTE ################
 Menu, Tray, Icon, %A_ScriptDir%\assets\inactive.ico, 1
+Menu,Tray, Tip, Local Codebase: Sleeping
 RemoteSource = \\bullring\dmkbase\dcam																; Change this to \\bullring for real deal
-LocalDestination = D:\PowerMill_Builds																; Change this to my local build area
+InputBox, LocalDestination, Local codebase directory, Enter the directory of the local codebase repository., , , 130, , , , , D:\PowerMill_Builds
+If (ErrorLevel = 1) or (ErrorLevel = 2)
+{
+    ExitApp
+}
+; LocalDestination = D:\PowerMill_Builds																; Change this to my local build area
 
 RunOnStartup:
 TrayTip, Codebase copy startup , Checking %RemoteSource% for new builds.
+HideTrayTip()
 Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
+Menu,Tray, Tip, Local Codebase: Busy
 Get_tbt_versions()
 
 curl_networkfile("Trunk")
@@ -62,18 +70,21 @@ update_Trunk := ""
 update_Branch := ""
 update_Twig := ""
 
+Menu,Tray, Tip, Local Codebase: Checking if new build is in Trunk.
 folder_match_tbt("Trunk")
 If(is_in_Trunk = True)
 {
     update_Trunk := True
 }
 
+Menu,Tray, Tip, Local Codebase: Checking if new build is in Branch.
 folder_match_tbt("Branch")
 If(is_in_Branch = True)
 {
     update_Branch := True
 }
 
+Menu,, Tip, Local Codebase: Checking if new build is in Twig.
 folder_match_tbt("Twig")
 If(is_in_Twig = True)
 {
