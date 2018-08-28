@@ -1,205 +1,4 @@
 ;########################################################################################################################
-;UpdateJsonFiles()
-;{
-;	global
-;	tbt_filepath := ""
-;	update_trunk_json := ""
-;	update_branch_json := ""
-;	update_twig_json := ""
-;	If(update_Trunk = True)
-;	{
-;		tbt_filepath := A_ScriptDir . "\data\TrunkFilter.json"
-;		file := FileOpen(tbt_filepath, "w `n")
-;		file.Writeline("{")
-;		file.Writeline(A_Tab . """name"":"" Trunk Codebase Available"",")
-;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-;		
-;		loop % LoopObj_Trunk.length()
-;		{
-;			file.Write("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"" OR ")
-;			
-;			If(A_Index = 20)
-;			{
-;				file.Writeline("comment ~ \""is in " . LoopObj_Trunk[A_Index] . "\"")""")
-;				break
-;			}
-;		}
-;		
-;		file.Writeline("}")
-;		file.close()
-;		update_trunk_json := true
-;		tbt_filepath := ""
-;		
-;	}
-;	
-;	If(update_Branch = True)
-;	{
-;		tbt_filepath := A_ScriptDir . "\data\BranchFilter.json"
-;		file := FileOpen(tbt_filepath, "w `n")
-;		file.Writeline("{")
-;		file.Writeline(A_Tab . """name"":"" Branch Codebase Available"",")
-;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-;		
-;		loop % LoopObj_Branch.length()
-;		{
-;			file.Write("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"" OR ")
-;			
-;			If(A_Index = 20)
-;			{
-;				file.Writeline("comment ~ \""is in " . LoopObj_Branch[A_Index] . "\"")""")
-;				break
-;			}
-;		}
-;		
-;		file.Writeline("}")
-;		file.close()
-;		update_branch_json := true
-;		tbt_filepath := ""
-;	}
-;	
-;	If(update_Twig = True)
-;	{
-;		tbt_filepath := A_ScriptDir . "\data\TwigFilter.json"
-;		file := FileOpen(tbt_filepath, "w `n")
-;		file.Writeline("{")
-;		file.Writeline(A_Tab . """name"":"" Twig Codebase Available"",")
-;		file.Write(A_Tab . """jql"":""filter = 101209 AND (")
-;		
-;		loop % LoopObj_Twig.length()
-;		{
-;			file.Write("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"" OR ")
-;			If(A_Index = 20)
-;			{
-;				file.Writeline("comment ~ \""is in " . LoopObj_Twig[A_Index] . "\"")""")
-;				break
-;			}
-;		}
-;		
-;		file.Writeline("}")
-;		file.close()
-;		update_twig_json := true
-;		tbt_filepath := ""
-;	}
-;Return
-;}
-;########################################################################################################################
-;########################################################################################################################
-Get_jira_issues(tbt_version)
-{
-	global
-	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
-	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "_search_config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json", ,hide
-	tbt_version := ""
-	return
-}
-
-;########################################################################################################################
-;########################################################################################################################
-Loop_file_extract_data_to_array(file_path_to_read,line_identifier, split_delimiter, split_array_number_to_extract,tbt_version)
-{
-	global
-	current_obj_name := "FileExtractLoopObj_" . tbt_version 
-	%current_obj_name% := object()
-	Loop, Read, %file_path_to_read%
-	{
-		If(InStr(A_LoopReadLine, line_identifier, True))
-		{
-			LoopSplit := StrSplit(A_LoopReadLine, split_delimiter, " \t")
-			%current_obj_name%.push(LoopSplit[split_array_number_to_extract])
-		}
-	}
-	tbt_version := ""
-	current_obj_name := ""
-	return
-}
-;########################################################################################################################
-;########################################################################################################################
-CopyIfNewer(RemoteDir,LocalDir)
-{
-	global
-	copy_happen := ""
-    codebase_name := ""
-	RemoteFolderNames := ""
-	RemoteDateOrdName_Obj := Object()
-	RemoteDateOrdTime_Obj := Object()
-	Menu,Tray, Tip, Local Codebase: Getting remote folder names.
-	Loop, Files, %RemoteDir%\*, D
-	{
-		RemoteFolderNames := RemoteFolderNames . A_LoopFileTimeModified . "`t" . A_LoopFileName . "`n"
-	}
-	
-	Sort, RemoteFolderNames, R
-	
-	Loop, Parse, RemoteFolderNames, `n
-	{
-		if (A_LoopField = "")
-		{
-			continue 																									; Omit the last linefeed (blank item) at the end of the list.
-		}
-		RemoteFolderArray := StrSplit(A_LoopField, A_Tab, " `t")
-		RemoteDateOrdName_Obj.Insert(RemoteFolderArray[2])
-		RemoteDateOrdTime_Obj.Insert(RemoteFolderArray[1])
-	}
-	RemoteFolderNames := ""
-	RemoteFolderArray := ""
-	
-	Menu,Tray, Tip, Local Codebase: Checking remote names against local names.
-	Loop % RemoteDateOrdName_Obj.length()
-	{
-		file_exist := false
-		copy_it := False
-		codebase_name := ""
-		pmill2pm := ""
-		file_exist := FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index])
-		if (FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]))
-		{
-			FileGetTime, time, % LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
-			EnvSub, time, % RemoteDateOrdTime_Obj[A_Index], seconds  													; Subtract the source file's time from the destination's.
-			if time < 0 																								; Source file is newer than destination file.
-			{
-				copy_it := True
-				copy_happen := True
-			}
-		}
-		else
-		{
-			file_exist := false
-		}
-		if (copy_it = True) OR (file_exist = false)
-		{
-			Menu, Tray, Icon, %A_ScriptDir%\assets\copying.ico, 1
-			pmill2pm := StrReplace(RemoteDateOrdName_Obj[A_Index],"powermill", "pm")
-			codebase_name := pmill2pm
-			Gosub, Check_tbt
-			
-			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
-			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
-			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
-			FileCreateDir, %LocalPath%																					; Uncomment this line to initialise the local area with empty folders.
-			;FileCopyDir, %RemotePath%, %LocalPath%, 1   																; Copy with overwrite=yes
-			if ErrorLevel
-			{
-				MsgBox, Could not copy "%RemotePath%" to "%LocalPath%".
-				ExitApp
-			}
-			FileSetTime,, %LocalPath%, M, 2, 0
-			Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
-			;Gosub, Update_json
-			Gosub, Curl_issues_from_jira
-			Gosub, Extract_issue_keys_from_filter
-			Gosub, Curl_to_jira
-		}
-	}
-    codebase_name := ""
-	If (copy_happen = False)
-	{
-		TrayTip, Codebase copy ,There were no codebases to copy.
-	}
-	Return
-}
-
-;########################################################################################################################
-;########################################################################################################################
 Get_tbt_versions()
 {
 	global
@@ -257,11 +56,12 @@ Get_tbt_versions()
 	return
 }
 ;########################################################################################################################
-;########################################################################################################################
 
+;########################################################################################################################
 curl_networkfile(tbt_version)
 {
 	global
+	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
 	Menu,Tray, Tip, Local Codebase: Downloading //bullring/devbase/devdisk/dmk/configs/%tbt_version%.html.
 	configString := "tbt_" . tbt_version . "Code"
 	curlString := "curl file:////bullring/devbase/devdisk/dmk/configs/" . %configString% . "/files/closed.html -o """ . A_ScriptDir . "/data/network_responses/" . tbt_version "_networkfile.txt"""
@@ -270,37 +70,94 @@ curl_networkfile(tbt_version)
 	return
 }
 ;########################################################################################################################
-;########################################################################################################################
 
-curl_jirajson(tbt_version)
+;########################################################################################################################
+CopyIfNewer(RemoteDir,LocalDir)
 {
 	global
-	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
-	;current_obj_name := FileExtractLoopObj_tbt_version()
-	current_obj_name := "FileExtractLoopObj_" . tbt_version
-	;%current_obj_name% := Object()
-	Loop % %current_obj_name%.length()
+	copy_happen := ""
+    codebase_name := ""
+	RemoteFolderNames := ""
+	RemoteDateOrdName_Obj := Object()
+	RemoteDateOrdTime_Obj := Object()
+	Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
+	Menu,Tray, Tip, Local Codebase: Getting remote folder names.
+	Loop, Files, %RemoteDir%\*, D
 	{
-		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
-		file := FileOpen(curldata_filepath, "w `n")
-		file.Writeline("{")
-		file.Writeline(A_Tab . """issueKey"":""" . %current_obj_name%[A_Index] . """,")
-		file.Writeline(A_Tab . """propertyKey"":""" . tbt_version ".cb.ready"",")
-		file.Writeline(A_Tab . """propertyValue"":""yes"",")
-		file.Writeline(A_Tab . """mask"":false")
-		file.Writeline("}")
-		file.close()
-		
-		RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_response.json", , hide
+		RemoteFolderNames := RemoteFolderNames . A_LoopFileTimeModified . "`t" . A_LoopFileName . "`n"
 	}
-	;RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_output.txt", ,hide
-	tbt_version := ""
-	current_obj_name := ""
-	return
+	
+	Sort, RemoteFolderNames, R
+	
+	Loop, Parse, RemoteFolderNames, `n
+	{
+		if (A_LoopField = "")
+		{
+			continue 																									; Omit the last linefeed (blank item) at the end of the list.
+		}
+		RemoteFolderArray := StrSplit(A_LoopField, A_Tab, " `t")
+		RemoteDateOrdName_Obj.Insert(RemoteFolderArray[2])
+		RemoteDateOrdTime_Obj.Insert(RemoteFolderArray[1])
+	}
+	RemoteFolderNames := ""
+	RemoteFolderArray := ""
+	
+	Menu,Tray, Tip, Local Codebase: Checking remote names against local names.
+	Loop % RemoteDateOrdName_Obj.length()
+	{
+		file_exist := false
+		copy_it := False
+		codebase_name := ""
+		pmill2pm := ""
+		file_exist := FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index])
+		if (FileExist(LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]))
+		{
+			FileGetTime, time, % LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			EnvSub, time, % RemoteDateOrdTime_Obj[A_Index], seconds  													; Subtract the source file's time from the destination's.
+			if time < 0 																								; Source file is newer than destination file.
+			{
+				copy_it := True
+				copy_happen := True
+			}
+		}
+		else
+		{
+			file_exist := false
+		}
+		if (copy_it = True) OR (file_exist = false)
+		{
+			Menu, Tray, Icon, %A_ScriptDir%\assets\copying.ico, 1
+			pmill2pm := StrReplace(RemoteDateOrdName_Obj[A_Index],"powermill", "pm")
+			codebase_name := pmill2pm
+			Gosub, Check_tbt
+			
+			TrayTip, Codebase copy, % "Updating local PowerMill codebase with " . RemoteDateOrdName_Obj[A_Index] . "."
+			RemotePath := RemoteDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			LocalPath := LocalDir . "\" . RemoteDateOrdName_Obj[A_Index]
+			;FileCreateDir, %LocalPath%																					; Uncomment this line to initialise the local area with empty folders.
+			FileCopyDir, %RemotePath%, %LocalPath%, 1   																; Copy with overwrite=yes
+			if ErrorLevel
+			{
+				MsgBox, Could not copy "%RemotePath%" to "%LocalPath%".
+				ExitApp
+			}
+			FileSetTime,, %LocalPath%, M, 2, 0
+			Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
+			Gosub, Curl_issues_from_jira
+			Gosub, Extract_issue_keys_from_filter
+			Gosub, Curl_to_jira
+		}
+	}
+    codebase_name := ""
+	If (copy_happen = False)
+	{
+		TrayTip, Codebase copy ,There were no codebases to copy.
+	}
+	Return
 }
 ;########################################################################################################################
-;########################################################################################################################
 
+;########################################################################################################################
 folder_match_tbt(tbt_version)
 {
 	global
@@ -328,19 +185,79 @@ folder_match_tbt(tbt_version)
 	current_obj_name := ""
 	return
 }
+;########################################################################################################################
+
+;########################################################################################################################
+Get_jira_issues(tbt_version)
+{
+	global
+	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
+	RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "_search_config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json", ,hide
+	tbt_version := ""
+	return
+}
+
+;########################################################################################################################
+
+;########################################################################################################################
+Loop_file_extract_data_to_array(file_path_to_read,line_identifier, split_delimiter, split_array_number_to_extract,tbt_version)
+{
+	global
+	current_obj_name := "FileExtractLoopObj_" . tbt_version 
+	%current_obj_name% := object()
+	Loop, Read, %file_path_to_read%
+	{
+		If(InStr(A_LoopReadLine, line_identifier, True))
+		{
+			LoopSplit := StrSplit(A_LoopReadLine, split_delimiter, " \t")
+			%current_obj_name%.push(LoopSplit[split_array_number_to_extract])
+		}
+	}
+	tbt_version := ""
+	current_obj_name := ""
+	return
+}
+;########################################################################################################################
+
+;########################################################################################################################
+curl_jirajson(tbt_version)
+{
+	global
+	Menu, Tray, Icon, %A_ScriptDir%\assets\jira.ico, 1
+	current_obj_name := "FileExtractLoopObj_" . tbt_version
+	Loop % %current_obj_name%.length()
+	{
+		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
+		file := FileOpen(curldata_filepath, "w `n")
+		file.Writeline("{")
+		file.Writeline(A_Tab . """issueKey"":""" . %current_obj_name%[A_Index] . """,")
+		file.Writeline(A_Tab . """propertyKey"":""" . tbt_version ".cb.ready"",")
+		file.Writeline(A_Tab . """propertyValue"":""yes"",")
+		file.Writeline(A_Tab . """mask"":false")
+		file.Writeline("}")
+		file.close()
+		
+		RunWait, % comspec . A_Space . "/c" . A_Space . A_ScriptDir . "\curl.exe -K" . A_Space . """" . A_ScriptDir . "\data\configs\" . tbt_version . "Config.txt"" |" . A_Space . A_ScriptDir . "\jq-win64.exe . >" . A_ScriptDir . "\data\network_responses\" . tbt_version . "_parsed_response.json", , hide
+	}
+	tbt_version := ""
+	current_obj_name := ""
+	return
+}
+;########################################################################################################################
 
 
 ;########################################################################################################################
-;########################################################################################################################
-
 HideTrayTip()
 {
 	Sleep, 2000
     TrayTip  ; Attempt to hide it the normal way.
-    if SubStr(A_OSVersion,1,3) = "10." {
+    if SubStr(A_OSVersion,1,3) = "10." 
+	{
         Menu Tray, NoIcon
         Sleep 200  ; It may be necessary to adjust this sleep.
         Menu Tray, Icon
 		Menu, Tray, Tip, HideTrayTip
     }
+	return
 }
+;############################################################################################

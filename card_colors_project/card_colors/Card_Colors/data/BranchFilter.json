@@ -1,4 +1,0 @@
-{
-	"name":" Branch Codebase Available",
-	"jql":"filter = 101209 AND (comment ~ \"is in pm2231073\" OR comment ~ \"is in pm2231072\" OR comment ~ \"is in pm2231071\" OR comment ~ \"is in pm2231070\" OR comment ~ \"is in pm2231069\" OR comment ~ \"is in pm2231068\" OR comment ~ \"is in pm2231067\" OR comment ~ \"is in pm2231066\" OR comment ~ \"is in pm2231065\" OR comment ~ \"is in pm2231064\" OR comment ~ \"is in pm2231063\" OR comment ~ \"is in pm2231062\" OR comment ~ \"is in pm2231061\" OR comment ~ \"is in pm2231060\" OR comment ~ \"is in pm2231059\" OR comment ~ \"is in pm2231058\" OR comment ~ \"is in pm2231057\" OR comment ~ \"is in pm2231056\" OR comment ~ \"is in pm2231055\" OR comment ~ \"is in pm2231054\" OR comment ~ \"is in pm2231054\")"
-}
