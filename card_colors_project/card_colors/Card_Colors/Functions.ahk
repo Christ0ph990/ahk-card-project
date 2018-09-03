@@ -227,7 +227,7 @@ curl_jirajson(tbt_version)
 	current_obj_name := "FileExtractLoopObj_" . tbt_version
 	Loop % %current_obj_name%.length()
 	{
-		curldata_filepath := A_ScriptDir . "\data\network_responses\" . tbt_version . "_search_parsed_output.json"
+		curldata_filepath := A_ScriptDir . "\data\network_requests\" . tbt_version . "_issue_property_request.json"
 		file := FileOpen(curldata_filepath, "w `n")
 		file.Writeline("{")
 		file.Writeline(A_Tab . """issueKey"":""" . %current_obj_name%[A_Index] . """,")

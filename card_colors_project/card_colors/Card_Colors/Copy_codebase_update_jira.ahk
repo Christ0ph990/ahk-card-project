@@ -9,29 +9,30 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 SetFormat, float, 0.2
 #Include %A_ScriptDir%\Functions.ahk
-FileRemoveDir, %A_ScriptDir%\data\, 1
+;FileRemoveDir, %A_ScriptDir%\data\, 1
 FileCreateDir, %A_ScriptDir%\data\
 FileCreateDir, %A_ScriptDir%\data\configs\
 FileCreateDir, %A_ScriptDir%\data\network_responses\
-FileRemoveDir, %A_ScriptDir%\assets\, 1
+FileCreateDir, %A_ScriptDir%\data\network_requests\
+;FileRemoveDir, %A_ScriptDir%\assets\, 1
 FileCreateDir, %A_ScriptDir%\assets\
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\curl.exe, %A_ScriptDir%\curl.exe,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\jq-win64.exe, %A_ScriptDir%\jq-win64.exe,1
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\busy.ico, %A_ScriptDir%\assets\busy.ico
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\copying.ico, %A_ScriptDir%\assets\copying.ico
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\inactive.ico, %A_ScriptDir%\assets\inactive.ico
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\jira.ico, %A_ScriptDir%\assets\jira.ico
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\cacert.pem, %A_ScriptDir%\data\cacert.pem
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\curl-ca-bundle.crt, %A_ScriptDir%\data\curl-ca-bundle.crt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Trunk_search_config.txt, %A_ScriptDir%\data\configs\Trunk_search_config.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Branch_search_config.txt, %A_ScriptDir%\data\configs\Branch_search_config.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Twig_search_config.txt, %A_ScriptDir%\data\configs\Twig_search_config.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\TrunkConfig.txt, %A_ScriptDir%\data\configs\TrunkConfig.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\BranchConfig.txt, %A_ScriptDir%\data\configs\BranchConfig.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\TwigConfig.txt, %A_ScriptDir%\data\configs\TwigConfig.txt
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Trunk_search_data.json, %A_ScriptDir%\data\configs\Trunk_search_data.json
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Branch_search_data.json, %A_ScriptDir%\data\configs\Branch_search_data.json
-FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Twig_search_data.json, %A_ScriptDir%\data\configs\Twig_search_data.json
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\busy.ico, %A_ScriptDir%\assets\busy.ico,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\copying.ico, %A_ScriptDir%\assets\copying.ico,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\inactive.ico, %A_ScriptDir%\assets\inactive.ico,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\jira.ico, %A_ScriptDir%\assets\jira.ico,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\cacert.pem, %A_ScriptDir%\data\cacert.pem,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\curl-ca-bundle.crt, %A_ScriptDir%\data\curl-ca-bundle.crt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Trunk_search_config.txt, %A_ScriptDir%\data\configs\Trunk_search_config.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Branch_search_config.txt, %A_ScriptDir%\data\configs\Branch_search_config.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Twig_search_config.txt, %A_ScriptDir%\data\configs\Twig_search_config.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\TrunkConfig.txt, %A_ScriptDir%\data\configs\TrunkConfig.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\BranchConfig.txt, %A_ScriptDir%\data\configs\BranchConfig.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\TwigConfig.txt, %A_ScriptDir%\data\configs\TwigConfig.txt,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Trunk_search_config.json, %A_ScriptDir%\data\configs\Trunk_search_config.json,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Branch_search_config.json, %A_ScriptDir%\data\configs\Branch_search_config.json,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Twig_search_config.json, %A_ScriptDir%\data\configs\Twig_search_config.json,1
 
 ;############################################################################################
 
@@ -69,14 +70,22 @@ EnvAdd, target, 1, h
 if (target < A_Now) 																					; time(today) has passed already, so use time(tomorrow)
 {   
     EnvAdd, target, 1, d
-} 																										; Calculate how many seconds until the target time is reached.
-EnvSub, target, %A_Now%, Seconds 																		; Sleep until the target is reached.
+}
+; Calculate how many seconds until the target time is reached.
+EnvSub, target, %A_Now%, Seconds
 humantime := (target / 60)
 humantime .= Format
 TrayTip, Codebase copy , Check complete`, next check in %humantime% minutes.
 Menu, Tray, Icon, %A_ScriptDir%\assets\inactive.ico, 1
-Menu,Tray, Tip, Local Codebase: Check complete`, next check in %humantime% minutes.
-Sleep, % target * 1000			
+Menu, Tray, Tip, Local Codebase: Check complete`, next check in %humantime% minutes. 
+; Sleep until the target is reached.
+;Sleep, % target * 1000	
+Loop
+{
+humantime -= 1    
+Menu, Tray, Tip, Local Codebase: Check complete`, next check in %humantime% minutes.
+Sleep, 60000
+} until (humantime = 0 )
 
 TrayTip, Codebase copy , Checking %RemoteSource% for new builds.
 Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
