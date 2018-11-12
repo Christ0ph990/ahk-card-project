@@ -142,6 +142,8 @@ CopyIfNewer(RemoteDir,LocalDir)
 				ExitApp
 			}
 			FileSetTime,, %LocalPath%, M, 2, 0
+			FileAppend, %LocalPath%`n, D:\5_Time_Trials_New\1_Assets\1_Other\builds_to_trial.txt
+			FileAppend, %LocalPath%`n, %A_ScriptDir%\assets\builds_to_trial.txt
 			Menu, Tray, Icon, %A_ScriptDir%\assets\busy.ico, 1
 			Gosub, Curl_issues_from_jira
 			Gosub, Extract_issue_keys_from_filter

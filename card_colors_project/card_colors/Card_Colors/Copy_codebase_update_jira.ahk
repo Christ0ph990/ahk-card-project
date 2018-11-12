@@ -22,6 +22,7 @@ FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\busy.i
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\copying.ico, %A_ScriptDir%\assets\copying.ico,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\inactive.ico, %A_ScriptDir%\assets\inactive.ico,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\jira.ico, %A_ScriptDir%\assets\jira.ico,1
+FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\assets\builds_to_trial.txt, %A_ScriptDir%\assets\builds_to_trial.txt,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\cacert.pem, %A_ScriptDir%\data\cacert.pem,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\curl-ca-bundle.crt, %A_ScriptDir%\data\curl-ca-bundle.crt,1
 FileInstall, D:\Github\card_colors_project\card_colors\Card_Colors\data\configs\Trunk_search_config.txt, %A_ScriptDir%\data\configs\Trunk_search_config.txt,1
@@ -205,4 +206,20 @@ return
 ;############################################################################################
 
 +Esc::
-ExitApp
+MsgBox, 4146, Abort program, Choose:`n`n  Abort —  Forces the program to close.`n  Retry — Reloads the program.`n  Ignore — Returns to normal execution.`n`n The program will automatically abort in 30 seconds if no choice is made., 30
+IfMsgBox, Abort
+{
+    ExitApp
+}
+IfMsgBox, Retry
+{
+    Reload
+}
+IfMsgBox, Ignore
+{
+    return
+}
+IfMsgBox, Timeout
+{
+    ExitApp
+}
