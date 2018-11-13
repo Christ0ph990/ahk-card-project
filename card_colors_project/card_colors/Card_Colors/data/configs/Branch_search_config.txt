@@ -1,6 +1,6 @@
 cacert="data\\cacert.pem"
 dump-header="data\\network_responses\\branch_search_headerdump.txt"
-user="barnesc:Adsk#990-"
+user="barnesc:Adsk#990--"
 header="Accept: application/json"
 header="Content-Type: application/json"
 request="POST"
