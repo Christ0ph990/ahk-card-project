@@ -1,0 +1,7 @@
+{
+	"jql":"filter = 101216",
+	"maxResults":100,
+	"fields": [
+		"name"
+	]
+}
